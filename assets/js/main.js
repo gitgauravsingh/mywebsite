@@ -1,118 +1,80 @@
-jQuery(window).on('load', function() {
-      
-    
-    // HIDE PRELAODER
-    $(".preloader").addClass("preloader-hidden");
+/**
+* Template Name: ComingSoon
+* Template URL: https://bootstrapmade.com/comingsoon-free-html-bootstrap-template/
+* Updated: Mar 17 2024 with Bootstrap v5.3.3
+* Author: BootstrapMade.com
+* License: https://bootstrapmade.com/license/
+*/
 
-    // SHOW/ANIMATE ANIMATION CONTAINER
-    setTimeout(function(){
+(function() {
+  "use strict";
 
-        $(".hero .animation-container").each(function(){
+  /**
+   * Easy selector helper function
+   */
+  const select = (el, all = false) => {
+    el = el.trim()
+    if (all) {
+      return [...document.querySelectorAll(el)]
+    } else {
+      return document.querySelector(el)
+    }
+  }
 
-            var e = $(this);
+  /**
+   * Easy event listener function
+   */
+  const on = (type, el, listener, all = false) => {
+    let selectEl = select(el, all)
+    if (selectEl) {
+      if (all) {
+        selectEl.forEach(e => e.addEventListener(type, listener))
+      } else {
+        selectEl.addEventListener(type, listener)
+      }
+    }
+  }
 
-            setTimeout(function(){
+  /**
+   * Easy on scroll event listener 
+   */
+  const onscroll = (el, listener) => {
+    el.addEventListener('scroll', listener)
+  }
 
-                e.addClass("run-animation");
+  /**
+   * Back to top button
+   */
+  let backtotop = select('.back-to-top')
+  if (backtotop) {
+    const toggleBacktotop = () => {
+      if (window.scrollY > 100) {
+        backtotop.classList.add('active')
+      } else {
+        backtotop.classList.remove('active')
+      }
+    }
+    window.addEventListener('load', toggleBacktotop)
+    onscroll(document, toggleBacktotop)
+  }
 
-            }, e.data("animation-delay") );
+  /**
+   * Countdown timer
+   */
+  let countdown = select('.countdown');
+  const output = countdown.innerHTML;
 
-        });
+  const countDownDate = function() {
+    let timeleft = new Date(countdown.getAttribute('data-count')).getTime() - new Date().getTime();
 
-    }, 900 );
+    let days = Math.floor(timeleft / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
 
-    
-});
+    countdown.innerHTML = output.replace('%d', days).replace('%h', hours).replace('%m', minutes).replace('%s', seconds);
+  }
+  countDownDate();
+  setInterval(countDownDate, 1000);
 
-
-jQuery(document).ready(function($) {
-	"use strict";
-    
-    
-    $(window).on('load', function() {
-        
-        // HIDE PRELAODER
-        $(".preloader").addClass("preloader-hidden");
-        
-        // SHOW/ANIMATE ANIMATION CONTAINER
-        setTimeout(function(){
-            
-            $(".hero .animation-container").each(function(){
-
-                var e = $(this);
-
-                setTimeout(function(){
-                    
-                    e.addClass("run-animation");
-                    
-                }, e.data("animation-delay") );
-
-            });
-            
-        }, 900 );
-        
-    });
-    
-    
-    // INIT PARALLAX PLUGIN
-    $(".hero .background-content.parallax-on").parallax({
-        scalarX: 24,
-        scalarY: 15,
-        frictionX: 0.1,
-        frictionY: 0.1,
-    });
-    
-    
-    // OPEN POPUP SEQUENCE
-    $(".open-popup").click(function(){
-        
-        $(".popup").addClass("show");
-        $(".popup").append('<div class="close-popup backface"></div>');
-        
-    });
-
-    // CLOSE POPUP SEQUENCE
-    $(document).on('click', '.close-popup', function(){ 
-        
-        $(".popup").removeClass("show");
-        $(".popup .backface").remove();
-        
-    });
-    
-    
-    // AJAX SUBSCRIBE FORM
-    $('.subscribe-form').submit(function() {
-
-        var postdata = $('.subscribe-form').serialize();
-
-        $.ajax({
-
-            type: 'POST',
-            url: 'assets/php/subscribe.php',
-            data: postdata,
-            dataType: 'json',
-            success: function(json) {
-
-                $('.subscribe-form').removeClass("form-error");
-
-                if(json.valid === 0) {
-                    
-                    $('.subscribe-form').addClass("form-error");
-                    
-                } else {
-
-                    $('.subscribe-form').addClass("form-success");
-                    $('.subscribe-form input,.subscribe-form button').val('').prop('disabled', true);
-                    
-                }
-                
-            }
-
-        });
-
-        return false;
-
-    });
-    
-    
-});
+})()
